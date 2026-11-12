@@ -39,8 +39,8 @@
     dialogSteps: $('#dialogSteps'),
     dialogTip: $('#dialogTip'),
     dialogTipText: $('#dialogTipText'),
-    dialogTile: $('#dialogTile'),
-    dialogEmoji: $('#dialogEmoji'),
+    dialogImage: $('#dialogImage'),
+    dialogCredit: $('#dialogCredit'),
     dialogFav: $('#dialogFav'),
     dialogClose: $('#dialogClose'),
     dialogDone: $('#dialogDone'),
@@ -165,9 +165,23 @@
     tile.className = 'card-tile';
     tile.style.setProperty('--hue', String(recipe.hue ?? 30));
     tile.setAttribute('aria-hidden', 'true');
-    const emoji = document.createElement('span');
-    emoji.textContent = recipe.emoji || '🍽️';
-    tile.append(emoji);
+    tile.dataset.emoji = recipe.emoji || '🍽️';
+
+    if (recipe.image) {
+      const img = document.createElement('img');
+      img.className = 'card-img';
+      img.src = recipe.image;
+      img.alt = '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.addEventListener('error', () => {
+        img.remove();
+        tile.classList.add('is-fallback');
+      });
+      tile.append(img);
+    } else {
+      tile.classList.add('is-fallback');
+    }
 
     const fav = document.createElement('button');
     fav.type = 'button';
@@ -218,6 +232,14 @@
     meta.append(timePill, servPill);
 
     body.append(cat, h3, desc, spices, meta);
+
+    if (recipe.credit) {
+      const credit = document.createElement('p');
+      credit.className = 'card-credit';
+      credit.textContent = `фото: ${shortAuthor(recipe.credit.author)} · ${recipe.credit.license}`;
+      body.append(credit);
+    }
+
     card.append(tile, fav, open, body);
     return card;
   }
@@ -247,6 +269,11 @@
     els.favFilter.setAttribute('aria-pressed', String(state.favoritesOnly));
   }
 
+  function shortAuthor(author) {
+    if (!author) return 'Wikimedia Commons';
+    return author.split(',')[0].split(';')[0].trim();
+  }
+
   /* ---------- dialog ---------- */
 
   let lastFocus = null;
@@ -274,8 +301,16 @@
       return tag;
     }));
 
-    els.dialogTile.style.setProperty('--hue', String(recipe.hue ?? 30));
-    els.dialogEmoji.textContent = recipe.emoji || '🍽️';
+    if (recipe.image) {
+      els.dialogImage.src = recipe.image;
+      els.dialogImage.alt = `Фото к рецепту «${recipe.title}»`;
+      els.dialogImage.hidden = false;
+    } else {
+      els.dialogImage.removeAttribute('src');
+      els.dialogImage.hidden = true;
+    }
+
+    renderCredit(recipe);
 
     els.dialogSteps.replaceChildren(...(recipe.steps || []).map((step) => {
       const li = document.createElement('li');
@@ -298,6 +333,27 @@
     if (!els.dialog.open) els.dialog.showModal();
     els.dialogClose.focus();
     history.replaceState(null, '', `#${recipe.id}`);
+  }
+
+  function renderCredit(recipe) {
+    const credit = recipe.credit;
+    if (!credit) {
+      els.dialogCredit.hidden = true;
+      els.dialogCredit.replaceChildren();
+      return;
+    }
+
+    const label = document.createElement('span');
+    label.textContent = `Фото: ${credit.author} · ${credit.license} · `;
+
+    const link = document.createElement('a');
+    link.href = credit.source;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'Wikimedia Commons';
+
+    els.dialogCredit.hidden = false;
+    els.dialogCredit.replaceChildren(label, link);
   }
 
   function renderServings() {

@@ -342,7 +342,24 @@ main, header, footer { position: relative; z-index: 1; }
   :root:not([data-theme="light"]) .card-tile { background: radial-gradient(120% 120% at 20% 15%, hsl(var(--hue) 32% 34%) 0%, hsl(var(--hue) 30% 24%) 60%, hsl(var(--hue) 28% 17%) 100%); }
 }
 
-.card-tile::after {
+.card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s ease;
+}
+.card:hover .card-img { transform: scale(1.05); }
+
+.card-tile.is-fallback::before {
+  content: attr(data-emoji);
+  position: relative;
+  z-index: 1;
+}
+
+.card-tile.is-fallback::after {
   content: "";
   position: absolute;
   inset: auto -20% -55% -20%;
@@ -351,8 +368,6 @@ main, header, footer { position: relative; z-index: 1; }
   background: rgba(255, 255, 255, .28);
   filter: blur(14px);
 }
-
-.card-tile > span { position: relative; z-index: 1; }
 
 .card-open {
   position: absolute;
@@ -420,6 +435,14 @@ main, header, footer { position: relative; z-index: 1; }
   gap: .4rem;
   margin-top: auto;
   padding-top: .5rem;
+}
+
+.card-credit {
+  margin: .35rem 0 0;
+  font-size: .66rem;
+  line-height: 1.3;
+  color: var(--ink-faint);
+  letter-spacing: .01em;
 }
 
 .meta-pill {
@@ -500,27 +523,42 @@ main, header, footer { position: relative; z-index: 1; }
   box-shadow: var(--shadow-md);
   overflow: hidden;
 }
+.dialog[open] { display: flex; flex-direction: column; }
 .dialog::backdrop { background: rgba(30, 18, 8, .5); backdrop-filter: blur(3px); }
 
+.dialog-hero {
+  position: relative;
+  flex: none;
+  background: var(--bg-2);
+}
+.dialog-hero img {
+  display: block;
+  width: 100%;
+  height: min(34vh, 280px);
+  object-fit: cover;
+}
+.dialog-hero img[hidden] { display: none; }
+
+.dialog-close {
+  position: absolute;
+  top: .75rem;
+  right: .75rem;
+  background: rgba(255, 255, 255, .88);
+  border-color: transparent;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
+}
+:root[data-theme="dark"] .dialog-close { background: rgba(20, 16, 13, .78); color: var(--ink); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .dialog-close { background: rgba(20, 16, 13, .78); color: var(--ink); }
+}
+
 .dialog-head {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 1rem;
-  align-items: start;
-  padding: 1.1rem 1.2rem;
+  flex: none;
+  padding: 1.1rem 1.2rem .9rem;
   border-bottom: 1px solid var(--line);
   background: var(--panel-2);
 }
-
-.dialog-tile {
-  display: grid;
-  place-items: center;
-  width: 4.2rem; height: 4.2rem;
-  border-radius: 14px;
-  font-size: 2rem;
-  background: radial-gradient(120% 120% at 25% 20%, hsl(var(--hue, 30) 75% 88%), hsl(var(--hue, 30) 55% 68%));
-}
-:root[data-theme="dark"] .dialog-tile { background: radial-gradient(120% 120% at 25% 20%, hsl(var(--hue, 30) 32% 34%), hsl(var(--hue, 30) 28% 20%)); }
 
 .dialog-title h2 {
   margin: .1rem 0 .3rem;
@@ -531,9 +569,20 @@ main, header, footer { position: relative; z-index: 1; }
 .dialog-title .eyebrow { margin: 0; font-size: .7rem; }
 .dialog-title .muted { margin: 0; font-size: .85rem; }
 
-.dialog-close { align-self: start; }
+.dialog-body {
+  padding: 1.2rem;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overscroll-behavior: contain;
+}
 
-.dialog-body { padding: 1.2rem; overflow-y: auto; max-height: calc(88vh - 12rem); }
+.dialog-credit {
+  margin: -.6rem 0 1.1rem;
+  font-size: .74rem;
+  color: var(--ink-faint);
+}
+.dialog-credit a { color: inherit; }
 
 .dialog-desc { margin: 0 0 1rem; color: var(--ink-soft); }
 
@@ -607,6 +656,7 @@ main, header, footer { position: relative; z-index: 1; }
 
 .dialog-foot {
   display: flex;
+  flex: none;
   justify-content: space-between;
   gap: .6rem;
   padding: .85rem 1.2rem;
@@ -624,7 +674,6 @@ main, header, footer { position: relative; z-index: 1; }
   .hero { padding-top: 2rem; }
   .brand-text small { display: none; }
   .search-row { flex-wrap: wrap; }
-  .dialog-head { grid-template-columns: auto 1fr; }
-  .dialog-close { position: absolute; top: .8rem; right: .8rem; }
-  .dialog { position: relative; }
+  .dialog-hero img { height: min(26vh, 190px); }
+  .dialog-body { padding: 1rem; }
 }
