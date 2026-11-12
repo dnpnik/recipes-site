@@ -7,7 +7,7 @@
 |---|---|---|---|
 | syrniki-kardamon | Juerg Vollmer from Zürich, Switzerland ; cut by Off-shell | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Syrniki.jpg) |
 | ovsyanka-yabloko | Shisma | CC BY 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Apple_cinnamon_oatmeal_5.jpg) |
-| omlet-zira | Sgsamrat2021 | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Bell_Pepper_Omelette_kolkata_West_Bengal_03.jpg) |
+| omlet-zira | Andy Li | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Frittata_-_Bam%27s_Kitchen_2024-04-02.jpg) |
 | tykva-kurkuma | Minja Klarić | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pumpkin_soup_with_seeds_and_croutons_in_Bosnia_and_Herzegovina-bs.jpg) |
 | bulon-imbir | E4024 | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Chicken_broth_soup.jpg) |
 | chechevica-paprika | Whoisjohngalt | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Bowl_of_lentil_soup_with_green_and_red_lentils.jpg) |
