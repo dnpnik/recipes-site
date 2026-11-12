@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пряная кухня — домашние рецепты с приправами</title>
+<meta name="description" content="Пятнадцать проверенных домашних рецептов с приправами: завтраки, супы, основные блюда, выпечка, напитки и соусы. Поиск по ингредиентам и приправам.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#catalog">Перейти к рецептам</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="./" aria-label="Пряная кухня — на главную">
+      <span class="brand-mark" aria-hidden="true">🌿</span>
+      <span class="brand-text">
+        <strong>Пряная кухня</strong>
+        <small>домашние рецепты с приправами</small>
+      </span>
+    </a>
+    <div class="header-actions">
+      <button type="button" id="favFilter" class="btn ghost" aria-pressed="false">
+        <span aria-hidden="true">★</span> Избранное
+        <span class="count" id="favCount">0</span>
+      </button>
+      <button type="button" id="themeToggle" class="btn icon" aria-label="Переключить тему" title="Светлая или тёмная тема">
+        <span id="themeIcon" aria-hidden="true">🌙</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <p class="eyebrow">Специи вместо скуки</p>
+    <h1>Готовьте по пряностям,<br>а не по памяти</h1>
+    <p class="lede">
+      Пятнадцать рецептов домашней кухни — от сырников с кардамоном до плова с барбарисом.
+      Каждый рецепт объясняет, какая приправа что делает, чтобы в следующий раз вы обошлись без него.
+    </p>
+
+    <div class="search-row">
+      <label class="search-field">
+        <span class="visually-hidden">Поиск по рецептам</span>
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="search" type="search" autocomplete="off" placeholder="Рецепт, ингредиент или приправа — например, зира">
+      </label>
+      <button type="button" id="resetBtn" class="btn ghost" hidden>Сбросить</button>
+    </div>
+
+    <div class="chips" id="chips" role="group" aria-label="Категории рецептов"></div>
+    <p class="result-line" id="resultLine" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="wrap" id="catalog">
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>
+      <p class="empty-emoji" aria-hidden="true">🍽️</p>
+      <p><strong>Ничего не нашлось.</strong></p>
+      <p class="muted">Попробуйте другое слово — например, «корица», «тыква» или «суп».</p>
+      <button type="button" class="btn" id="emptyReset">Показать все рецепты</button>
+    </div>
+  </section>
+
+  <section class="wrap about">
+    <h2>Как пользоваться</h2>
+    <div class="about-grid">
+      <article>
+        <h3>Ищите по приправе</h3>
+        <p>Поиск смотрит в названия, описания, ингредиенты и список специй. Введите «куркума» — найдёте суп, бульон и плов.</p>
+      </article>
+      <article>
+        <h3>Пересчитывайте порции</h3>
+        <p>В карточке рецепта есть счётчик порций: граммовки и ложки пересчитываются, время и техника остаются прежними.</p>
+      </article>
+      <article>
+        <h3>Собирайте избранное</h3>
+        <p>Звёздочка на карточке сохраняет рецепт в браузере. Кнопка «Избранное» в шапке оставит только его.</p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>Пряная кухня · данные в <code>data/recipes.json</code> · собрано в DeepSeek Harness</p>
+    <p class="muted"><a href="#catalog">Наверх</a></p>
+  </div>
+</footer>
+
+<dialog id="dialog" class="dialog" aria-labelledby="dialogTitle">
+  <div class="dialog-head">
+    <div class="dialog-tile" id="dialogTile" aria-hidden="true"><span id="dialogEmoji">🍽️</span></div>
+    <div class="dialog-title">
+      <p class="eyebrow" id="dialogCategory"></p>
+      <h2 id="dialogTitle"></h2>
+      <p class="muted" id="dialogMeta"></p>
+    </div>
+    <button type="button" class="btn icon dialog-close" id="dialogClose" aria-label="Закрыть">✕</button>
+  </div>
+
+  <div class="dialog-body">
+    <p class="dialog-desc" id="dialogDesc"></p>
+
+    <div class="spice-row" id="dialogSpices"></div>
+
+    <div class="dialog-cols">
+      <section class="ingredients">
+        <div class="section-head">
+          <h3>Ингредиенты</h3>
+          <div class="stepper" role="group" aria-label="Количество порций">
+            <button type="button" class="btn icon" id="minusServings" aria-label="Меньше порций">−</button>
+            <output id="servingsOut" aria-live="polite">2</output>
+            <button type="button" class="btn icon" id="plusServings" aria-label="Больше порций">+</button>
+            <span class="muted small">порц.</span>
+          </div>
+        </div>
+        <ul class="ingredient-list" id="dialogIngredients"></ul>
+      </section>
+
+      <section class="steps">
+        <h3>Приготовление</h3>
+        <ol class="step-list" id="dialogSteps"></ol>
+      </section>
+    </div>
+
+    <aside class="tip" id="dialogTip" hidden>
+      <strong>Совет по пряностям.</strong>
+      <span id="dialogTipText"></span>
+    </aside>
+  </div>
+
+  <div class="dialog-foot">
+    <button type="button" class="btn ghost" id="dialogFav">★ В избранное</button>
+    <button type="button" class="btn" id="dialogDone">Готово</button>
+  </div>
+</dialog>
+
+<noscript>
+  <p class="wrap noscript">Для поиска и карточек нужен JavaScript. Все рецепты также лежат в <code>data/recipes.json</code>.</p>
+</noscript>
+</body>
+</html>
